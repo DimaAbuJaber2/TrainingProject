@@ -3,6 +3,7 @@ package com.example.cityHotel.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 
@@ -12,13 +13,15 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class City {
-       @Id
+        @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Integer id;
         @Column(name="City_name",unique = true)
         private String name;
         @Column(name="City_address")
         private String address;
+        private Long latitude;
+        private Long longitude;
 
 
 
