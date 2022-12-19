@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Table(name="city")
 @Entity
@@ -21,8 +22,8 @@ public class City {
         private String address;
         @Embedded
         private locations location;
-//        @OneToMany(mappedBy = "city")
-//        private List<Hotel> hotels;
+        @OneToMany(mappedBy = "city")
+       private List<Hotel> hotels;
 
 
 
