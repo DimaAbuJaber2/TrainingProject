@@ -3,7 +3,6 @@ package com.example.cityHotel.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 
@@ -20,8 +19,10 @@ public class City {
         private String name;
         @Column(name="City_address")
         private String address;
-        private Long latitude;
-        private Long longitude;
+        @Embedded
+        private locations location;
+//        @OneToMany(mappedBy = "city")
+//        private List<Hotel> hotels;
 
 
 

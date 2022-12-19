@@ -32,4 +32,6 @@ public class CityController {
     @GetMapping("/get-all")
     public List<City> getAll() {return cityService.getAll();}
 
+//    @GetMapping("/search-city")
+//    public City search(@RequestParam String name) {return cityService.searchCity(name);}
 }

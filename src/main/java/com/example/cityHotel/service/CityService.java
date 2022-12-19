@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+
 public class CityService {
 
     @Autowired
@@ -34,4 +35,11 @@ public class CityService {
     public List<City> getAll() {
         return this.cityRepo.findAll();
     }
+
+//    public City searchCity(String name)
+//    {
+//        Optional<City> city=this.cityRepo.search_city(name);
+//        return city.orElse(null);
+//    }
+
 }
