@@ -1,6 +1,7 @@
 package com.example.cityHotel.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,8 +19,8 @@ public class Hotel {
     private Integer id;
     @Column(name="hotel_name")
     private String name;
-    @ManyToOne
-    @JoinColumn(name = "city_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "city_id",referencedColumnName = "id")
     private City city;
     @Embedded
     private locations location;

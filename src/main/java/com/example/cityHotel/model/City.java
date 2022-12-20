@@ -1,5 +1,6 @@
 package com.example.cityHotel.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,14 +17,15 @@ public class City {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Integer id;
-        @Column(name="City_name",unique = true)
+        @Column(name="City_name")
         private String name;
         @Column(name="City_address")
         private String address;
         @Embedded
         private locations location;
+        @JsonIgnore
         @OneToMany(mappedBy = "city")
-       private List<Hotel> hotels;
+        private List<Hotel> hotels;
 
 
 

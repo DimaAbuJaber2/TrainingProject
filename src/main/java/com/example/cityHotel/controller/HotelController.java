@@ -1,7 +1,9 @@
 package com.example.cityHotel.controller;
 
 
+import com.example.cityHotel.model.City;
 import com.example.cityHotel.model.Hotel;
+import com.example.cityHotel.service.CityService;
 import com.example.cityHotel.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -9,27 +11,30 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/hotels")
+@RequestMapping("/hotel")
 public class HotelController {
 
     @Autowired
     private HotelService hotelService;
-    @GetMapping("/get-hotel")
-    public Hotel getHotel(@RequestParam Integer id) {return hotelService.getHotel(id);}
-    @PostMapping("/save-hotel")
-    public Hotel save(@RequestBody Hotel hotel)
-    {
-        return hotelService.save(hotel);
+    @Autowired
+    private CityService cityService;
+    @GetMapping("/{id}")
+    public Hotel getHotel(@PathVariable int id) {
+        return hotelService.getHotel(id);
     }
+    @PostMapping("/")
 
-    @PutMapping("/update-hotel")
+    public Hotel saveHotel(@RequestBody Hotel hotel) {
+        return hotelService.saveHotel(hotel);
+    }
+    @PutMapping("/")
     public Hotel update(@RequestBody Hotel hotel)
     {
-        return hotelService.save(hotel);
+        return hotelService.saveHotel(hotel);
     }
-    @DeleteMapping("/delete-hotel")
-    public void delete(@RequestParam Integer id) {hotelService.delete(id);}
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable int id) {hotelService.delete(id);}
 
-    @GetMapping("/get-all-hotels")
+    @GetMapping("/")
     public List<Hotel> getAll() {return hotelService.getAll();}
 }

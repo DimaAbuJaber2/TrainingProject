@@ -9,27 +9,26 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/cities")
+@RequestMapping("/city")
 public class CityController {
     @Autowired
     private CityService cityService;
-    @GetMapping("/get-city")
-    public City getCity(@RequestParam Integer id) {return cityService.getCity(id);}
-    @PostMapping("/save-city")
+    @GetMapping("/{id}")
+    public City getCity(@PathVariable int id) {return cityService.getCity(id);}
+    @PostMapping("/")
     public City save(@RequestBody City city)
     {
         return cityService.save(city);
     }
 
-    @PutMapping("/update-city")
-    public City update(@RequestBody City city)
-    {
-        return cityService.save(city);
-    }
-    @DeleteMapping("/delete-city")
-    public void delete(@RequestParam Integer id) {cityService.delete(id);}
+//    @PutMapping("/{id}")
+//    public City updateCity(@PathVariable Integer id, @RequestParam("hotelIds") List<Integer> hotelIds, @RequestBody City city) {
+//        return cityService.updateCity(id, hotelIds, city);}
 
-    @GetMapping("/get-all")
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable int id) {cityService.delete(id);}
+
+    @GetMapping("/")
     public List<City> getAll() {return cityService.getAll();}
 
 //    @GetMapping("/search-city")
