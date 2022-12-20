@@ -35,6 +35,9 @@ public class HotelService {
 
 
     }
+    public List<Hotel> getHotelsInCity(City city) {
+        return hotelRepo.findByCity(city);
+    }
     public void delete(Integer id)
     {
         this.hotelRepo.deleteById(id);

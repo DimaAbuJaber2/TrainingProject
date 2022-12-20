@@ -37,4 +37,12 @@ public class HotelController {
 
     @GetMapping("/")
     public List<Hotel> getAll() {return hotelService.getAll();}
+
+    @GetMapping("/city/{cityId}")
+    public List<Hotel> getHotelsInCity(@PathVariable Integer cityId) {
+        City city = cityService.getCity(cityId);
+        List<Hotel> hotels = hotelService.getHotelsInCity(city);
+        return hotels;
+
+    }
 }
