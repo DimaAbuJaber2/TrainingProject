@@ -19,7 +19,7 @@ public class HotelController {
     @Autowired
     private CityService cityService;
     @GetMapping("/{id}")
-    public Hotel getHotel(@PathVariable int id) {
+    public Hotel getHotel(@PathVariable Integer id) {
         return hotelService.getHotel(id);
     }
     @PostMapping("/")
@@ -33,7 +33,7 @@ public class HotelController {
         return hotelService.saveHotel(hotel);
     }
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id) {hotelService.delete(id);}
+    public void delete(@PathVariable Integer id) {hotelService.delete(id);}
 
     @GetMapping("/")
     public List<Hotel> getAll() {return hotelService.getAll();}

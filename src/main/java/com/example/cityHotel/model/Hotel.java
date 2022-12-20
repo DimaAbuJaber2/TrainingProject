@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Table(name="hotel",uniqueConstraints = @UniqueConstraint(columnNames = {"id", "city_id"}))
+@Table(name="hotel",uniqueConstraints = @UniqueConstraint(columnNames = {"hotel_name", "city_id","latitude","longitude"}))
 @Entity
 @Data
 @NoArgsConstructor
