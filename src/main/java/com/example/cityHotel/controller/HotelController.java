@@ -3,8 +3,10 @@ package com.example.cityHotel.controller;
 
 import com.example.cityHotel.model.City;
 import com.example.cityHotel.model.Hotel;
+import com.example.cityHotel.request.RatingRequest;
 import com.example.cityHotel.service.CityService;
 import com.example.cityHotel.service.HotelService;
+import com.example.cityHotel.service.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,11 @@ public class HotelController {
     private HotelService hotelService;
     @Autowired
     private CityService cityService;
+
+    @Autowired
+    private RatingService ratingService;
+
+
 //    @GetMapping("/{id}")
 //    public Hotel getHotel(@PathVariable Integer id) {
 //        return hotelService.getHotel(id);
@@ -60,5 +67,14 @@ public ResponseEntity<Map<String, Object>> getHotel(@PathVariable Integer id) {
         List<Hotel> hotels = hotelService.getHotelsInCity(city);
         return hotels;
 
+    }
+
+
+    @PostMapping("/{id}/rate")
+    public ResponseEntity<Void> rateHotel(@PathVariable int id, @RequestBody RatingRequest ratingRequest) {
+        Hotel hotel=hotelService.getHotel(id);
+        hotelService.rateHotel(hotel, ratingRequest.getRating());
+
+        return ResponseEntity.noContent().build();
     }
 }

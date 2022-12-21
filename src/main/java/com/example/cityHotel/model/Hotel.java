@@ -24,5 +24,8 @@ public class Hotel {
     private City city;
     @Embedded
     private locations location;
+    @JsonIgnore
+    private int numRatings=1;
+    private double rating;
 
 }

@@ -17,7 +17,8 @@ public class HotelService {
     private HotelRepo hotelRepo;
     @Autowired
     private CityRepo cityRepo;
-
+    @Autowired
+    private RatingService ratingService;
 
 
     public double getDistance(Hotel hotel) {
@@ -40,8 +41,9 @@ public class HotelService {
        //Save the city to update its list of hotels
       cityRepo.save(city);
 
-      // Save the hotel
-       return  hotelRepo.save(hotel);
+
+      // //update the rate of hotel and Save
+       return  hotelRepo.save( hotel);
 
 
     }
@@ -59,5 +61,9 @@ public class HotelService {
 
     public List<Hotel> getAll() {
         return this.hotelRepo.findAll();
+    }
+
+    public void rateHotel(Hotel hotel, int rating) {
+        ratingService.rateHotel(hotel, rating);
     }
 }
