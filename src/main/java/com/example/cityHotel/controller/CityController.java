@@ -23,9 +23,9 @@ public class CityController {
         return cityService.save(city);
     }
 
-    @PutMapping("/{id}")
-    public City updateCity(@PathVariable Integer id, @RequestParam("hotelIds") List<Integer> hotelIds, @RequestBody City city) throws BadRequestException {
-        return cityService.updateCity(id, hotelIds, city);
+    @PutMapping("/")
+    public City updateCity(@RequestBody City city) throws BadRequestException {
+        return cityService.updateCity(city);
     }
 
     @DeleteMapping("/{id}")

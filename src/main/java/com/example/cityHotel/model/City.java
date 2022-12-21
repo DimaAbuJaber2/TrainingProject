@@ -24,7 +24,7 @@ public class City {
         @Embedded
         private locations location;
         @JsonIgnore
-        @OneToMany(mappedBy = "city")
+        @OneToMany(mappedBy = "city",cascade = CascadeType.REMOVE)
         private List<Hotel> hotels;
 
 

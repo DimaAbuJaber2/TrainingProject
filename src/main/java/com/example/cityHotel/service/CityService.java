@@ -32,23 +32,28 @@ public class CityService {
     {
          this.cityRepo.deleteById(id);
     }
-    public City updateCity( Integer id, List<Integer> hotelIds, City city) {
-        City existingCity = cityRepo.findById(id).orElse(null);
-        List<Hotel> hotels = hotelRepo.findByIdIn(hotelIds);
+//    public City updateCity( Integer id, List<Integer> hotelIds, City city) {
+//        City existingCity = cityRepo.findById(id).orElse(null);
+//        List<Hotel> hotels = hotelRepo.findByIdIn(hotelIds);
+//
+//        existingCity.setName(city.getName());
+//        existingCity.setAddress(city.getAddress());
+//        existingCity.setLocation(city.getLocation());
+//        existingCity.setHotels(hotels);
+//
+//        for (Hotel hotel : hotels) {
+//            hotel.setCity(existingCity);
+//        }
+//
+//        cityRepo.save(existingCity);
+//        hotelRepo.saveAll(hotels);
+//
+//        return existingCity;
+//    }
+    public City updateCity(City city)
+    {
 
-        existingCity.setName(city.getName());
-        existingCity.setAddress(city.getAddress());
-        existingCity.setLocation(city.getLocation());
-        existingCity.setHotels(hotels);
-
-        for (Hotel hotel : hotels) {
-            hotel.setCity(existingCity);
-        }
-
-        cityRepo.save(existingCity);
-        hotelRepo.saveAll(hotels);
-
-        return existingCity;
+        return cityRepo.save(city);
     }
 
 

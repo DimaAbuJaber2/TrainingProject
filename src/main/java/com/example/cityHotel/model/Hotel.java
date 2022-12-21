@@ -19,8 +19,8 @@ public class Hotel {
     private Integer id;
     @Column(name="hotel_name")
     private String name;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "city_id",referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "city_id")
     private City city;
     @Embedded
     private locations location;
