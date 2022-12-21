@@ -4,6 +4,7 @@ import com.example.cityHotel.model.City;
 import com.example.cityHotel.model.Hotel;
 import com.example.cityHotel.repository.CityRepo;
 import com.example.cityHotel.repository.HotelRepo;
+import com.example.cityHotel.utilities.CalculateDistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +17,19 @@ public class HotelService {
     private HotelRepo hotelRepo;
     @Autowired
     private CityRepo cityRepo;
+
+
+
+    public double getDistance(Hotel hotel) {
+
+        return CalculateDistance.distance(hotel.getCity().getLocation().getLatitude(), hotel.getCity().getLocation().getLongitude(), hotel.getLocation().getLatitude(), hotel.getLocation().getLongitude());
+
+    }
     public Hotel getHotel(Integer id)
     {
-        Optional<Hotel> hotel=this.hotelRepo.findById(id);
-        return hotel.orElse(null);
+        Optional<Hotel> hotelOpt = this.hotelRepo.findById(id);
+        return hotelOpt.orElse(null);
+
     }
     public Hotel saveHotel(Hotel hotel) {
         City city = cityRepo.findById(hotel.getCity().getId()).orElse(null);

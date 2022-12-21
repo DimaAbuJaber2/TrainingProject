@@ -24,4 +24,5 @@ public class Hotel {
     private City city;
     @Embedded
     private locations location;
+
 }
