@@ -1,4 +1,4 @@
-package com.example.dto;
+package com.example.cityHotel.dto;
 
 import com.example.cityHotel.model.City;
 import com.example.cityHotel.model.Hotel;

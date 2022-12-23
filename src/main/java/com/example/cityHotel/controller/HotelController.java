@@ -3,11 +3,11 @@ package com.example.cityHotel.controller;
 
 import com.example.cityHotel.model.City;
 import com.example.cityHotel.model.Hotel;
-import com.example.dto.RatingRequest;
+import com.example.cityHotel.dto.RatingRequest;
 import com.example.cityHotel.service.CityService;
 import com.example.cityHotel.service.HotelService;
 import com.example.cityHotel.service.RatingService;
-import com.example.dto.HotelDistanceDTO;
+import com.example.cityHotel.dto.HotelDistanceDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

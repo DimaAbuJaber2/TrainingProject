@@ -1,4 +1,4 @@
-package com.example.dto;
+package com.example.cityHotel.dto;
 
 public class DistanceDTO {
     private double distance;

@@ -2,7 +2,7 @@ package com.example.cityHotel.model;
 
 
 import com.example.cityHotel.utility.CalculateDistance;
-import com.example.dto.DistanceDTO;
+import com.example.cityHotel.dto.DistanceDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +22,7 @@ public class Hotel {
     private int id;
     @Column(name="hotel_name")
     private String name;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "city_id")
     private City city;
     @Embedded
