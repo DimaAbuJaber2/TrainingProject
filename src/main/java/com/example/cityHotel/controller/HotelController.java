@@ -28,10 +28,6 @@ public class HotelController {
     private RatingService ratingService;
 
 
-//    @GetMapping("/{id}")
-//    public Hotel getHotel(@PathVariable Integer id) {
-//        return hotelService.getHotel(id);
-//    }
 @GetMapping("/{id}")
 public HotelDistanceDTO getHotel(@PathVariable Integer id) {
     Hotel hotel = hotelService.getHotel(id);
@@ -91,5 +87,7 @@ public HotelDistanceDTO getHotel(@PathVariable Integer id) {
     }
 
     @GetMapping("/get/{name}")
-    public Hotel search(@PathVariable String name) {return hotelService.searchHotel(name);}
+    public HotelDistanceDTO search(@PathVariable String name) {Hotel hotel= hotelService.searchHotel(name);
+        double distance = hotel.findDistanceFromCity(hotel.getCity()).getDistance();
+        return new HotelDistanceDTO(hotel, distance);}
 }
