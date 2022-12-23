@@ -1,10 +1,8 @@
 package com.example.cityHotel.controller;
-
-import com.example.cityHotel.Exception.BadRequestException;
 import com.example.cityHotel.model.City;
-import com.example.cityHotel.model.Hotel;
 import com.example.cityHotel.service.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +22,7 @@ public class CityController {
     }
 
     @PutMapping("/")
-    public City updateCity(@RequestBody City city) throws BadRequestException {
+    public City updateCity(@RequestBody City city) {
         return cityService.updateCity(city);
     }
 
@@ -34,6 +32,6 @@ public class CityController {
     @GetMapping("/")
     public List<City> getAll() {return cityService.getAll();}
 
-//    @GetMapping("/search-city")
-//    public City search(@RequestParam String name) {return cityService.searchCity(name);}
+    @GetMapping("/get/{name}")
+    public City search(@PathVariable String name) {return cityService.searchCity(name);}
 }

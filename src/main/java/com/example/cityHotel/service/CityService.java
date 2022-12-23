@@ -1,5 +1,8 @@
 package com.example.cityHotel.service;
 
+import com.example.cityHotel.exception.CityNotFoundException;
+import com.example.cityHotel.exception.MissingCityNameException;
+import com.example.cityHotel.exception.MissingLocationException;
 import com.example.cityHotel.model.City;
 import com.example.cityHotel.model.Hotel;
 import com.example.cityHotel.repository.CityRepo;
@@ -21,38 +24,27 @@ public class CityService {
 
     public City getCity(Integer id)
     {
-        Optional<City> city=this.cityRepo.findById(id);
-        return city.orElse(null);
+       City city=this.cityRepo.findById(id).orElseThrow(()->new CityNotFoundException("city with id: "+id+" not found"));
+        return city;
+
     }
     public City save(City city)
     {
-       return this.cityRepo.save(city);
+        if(city.getName()==null) throw new MissingCityNameException("city name is required");
+        if(city.getLocation()==null)
+            throw new MissingLocationException("location attribute is required");
+        return this.cityRepo.save(city);
     }
     public void delete(Integer id)
     {
          this.cityRepo.deleteById(id);
     }
-//    public City updateCity( Integer id, List<Integer> hotelIds, City city) {
-//        City existingCity = cityRepo.findById(id).orElse(null);
-//        List<Hotel> hotels = hotelRepo.findByIdIn(hotelIds);
-//
-//        existingCity.setName(city.getName());
-//        existingCity.setAddress(city.getAddress());
-//        existingCity.setLocation(city.getLocation());
-//        existingCity.setHotels(hotels);
-//
-//        for (Hotel hotel : hotels) {
-//            hotel.setCity(existingCity);
-//        }
-//
-//        cityRepo.save(existingCity);
-//        hotelRepo.saveAll(hotels);
-//
-//        return existingCity;
-//    }
+
     public City updateCity(City city)
     {
-
+        if(city.getName()==null) throw new MissingCityNameException("city name is required");
+        if(city.getLocation()==null)
+            throw new MissingLocationException("location attribute is required");
         return cityRepo.save(city);
     }
 
@@ -61,10 +53,9 @@ public class CityService {
         return this.cityRepo.findAll();
     }
 
-//    public City searchCity(String name)
-//    {
-//        Optional<City> city=this.cityRepo.search_city(name);
-//        return city.orElse(null);
-//    }
+    public City searchCity(String name)
+    {
+       return this.cityRepo.findByName(name);
+    }
 
 }

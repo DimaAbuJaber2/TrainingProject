@@ -1,7 +1,11 @@
 package com.example.cityHotel.model;
 
+import com.sun.istack.NotNull;
+
 public class locations {
+    @NotNull()
     private double latitude;
+    @NotNull()
     private double longitude;
 
     public locations() {

@@ -1,4 +1,4 @@
-package com.example.cityHotel.request;
+package com.example.dto;
 
 public class RatingRequest {
     private int rating;

@@ -1,15 +1,15 @@
 package com.example.cityHotel.service;
 
+import com.example.cityHotel.exception.*;
 import com.example.cityHotel.model.City;
 import com.example.cityHotel.model.Hotel;
 import com.example.cityHotel.repository.CityRepo;
 import com.example.cityHotel.repository.HotelRepo;
-import com.example.cityHotel.utilities.CalculateDistance;
+import com.example.cityHotel.utility.CalculateDistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class HotelService {
@@ -21,20 +21,15 @@ public class HotelService {
     private RatingService ratingService;
 
 
-    public double getDistance(Hotel hotel) {
-
-        return CalculateDistance.distance(hotel.getCity().getLocation().getLatitude(), hotel.getCity().getLocation().getLongitude(), hotel.getLocation().getLatitude(), hotel.getLocation().getLongitude());
-
-    }
     public Hotel getHotel(Integer id)
     {
-        Optional<Hotel> hotelOpt = this.hotelRepo.findById(id);
-        return hotelOpt.orElse(null);
+        Hotel hotel = this.hotelRepo.findById(id).orElseThrow(()->new HotelNotFoundException("Hotel with id: "+id+" not found"));
+        return hotel;
 
     }
     public Hotel saveHotel(Hotel hotel) {
         City city = cityRepo.findById(hotel.getCity().getId()).orElse(null);
-
+        if(city==null) throw new CityNotFoundException("city is requires");
         hotel.setCity(city);
 
      city.getHotels().add(hotel);
@@ -42,7 +37,10 @@ public class HotelService {
       cityRepo.save(city);
 
 
-      // //update the rate of hotel and Save
+      // save the hotel
+        if(hotel.getName()==null) throw new MissingHotelNameException("hotel name is required");
+        if(hotel.getLocation()==null)
+            throw new MissingLocationException("location attribute is required");
        return  hotelRepo.save( hotel);
 
 
@@ -56,6 +54,10 @@ public class HotelService {
     }
     public Hotel update(Hotel hotel)
     {
+        if(hotel.getName()==null) throw new MissingHotelNameException("hotel name is required");
+        if(hotel.getLocation()==null)
+            throw new MissingLocationException("location attribute is required");
+        if(hotel.getCity()==null) throw new CityNotFoundException("city is required");
         return this.hotelRepo.save(hotel);
     }
 
@@ -65,5 +67,10 @@ public class HotelService {
 
     public void rateHotel(Hotel hotel, int rating) {
         ratingService.rateHotel(hotel, rating);
+    }
+
+    public Hotel searchHotel(String name)
+    {
+        return this.hotelRepo.findByName(name);
     }
 }

@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Table(name="city")
+@Table(name="city",uniqueConstraints = @UniqueConstraint(columnNames = {"latitude","longitude"}))
 @Entity
 @Data
 @NoArgsConstructor
@@ -22,6 +23,7 @@ public class City {
         @Column(name="City_address")
         private String address;
         @Embedded
+        @NonNull
         private locations location;
         @JsonIgnore
         @OneToMany(mappedBy = "city",cascade = CascadeType.REMOVE)

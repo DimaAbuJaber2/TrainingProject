@@ -3,17 +3,17 @@ package com.example.cityHotel.controller;
 
 import com.example.cityHotel.model.City;
 import com.example.cityHotel.model.Hotel;
-import com.example.cityHotel.request.RatingRequest;
+import com.example.dto.RatingRequest;
 import com.example.cityHotel.service.CityService;
 import com.example.cityHotel.service.HotelService;
 import com.example.cityHotel.service.RatingService;
+import com.example.dto.HotelDistanceDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/hotel")
@@ -33,17 +33,10 @@ public class HotelController {
 //        return hotelService.getHotel(id);
 //    }
 @GetMapping("/{id}")
-public ResponseEntity<Map<String, Object>> getHotel(@PathVariable Integer id) {
+public HotelDistanceDTO getHotel(@PathVariable Integer id) {
     Hotel hotel = hotelService.getHotel(id);
-    if (hotel != null) {
-        double distance = hotelService.getDistance(hotel);
-        Map<String, Object> response = new HashMap<>();
-        response.put("hotel", hotel);
-        response.put("distance", distance);
-        return ResponseEntity.ok(response);
-    } else {
-        return ResponseEntity.notFound().build();
-    }
+    double distance = hotel.findDistanceFromCity(hotel.getCity()).getDistance();
+    return new HotelDistanceDTO(hotel, distance);
 }
     @PostMapping("/")
 
@@ -59,14 +52,33 @@ public ResponseEntity<Map<String, Object>> getHotel(@PathVariable Integer id) {
     public void delete(@PathVariable Integer id) {hotelService.delete(id);}
 
     @GetMapping("/")
-    public List<Hotel> getAll() {return hotelService.getAll();}
+    public List<HotelDistanceDTO> getAll() {List<Hotel> hotels=hotelService.getAll();
+        List<HotelDistanceDTO> hotelDistanceDTOs = new ArrayList<>();
+        for(Hotel hotel: hotels)
+        {
+            double distance=hotel.findDistanceFromCity(hotel.getCity()).getDistance();
+            HotelDistanceDTO dto=new HotelDistanceDTO(hotel,distance);
+            hotelDistanceDTOs.add(dto);
+        }
+
+        return hotelDistanceDTOs;
+}
 
     @GetMapping("/city/{cityId}")
-    public List<Hotel> getHotelsInCity(@PathVariable Integer cityId) {
+    public List<HotelDistanceDTO> getHotelsInCity(@PathVariable Integer cityId) {
         City city = cityService.getCity(cityId);
         List<Hotel> hotels = hotelService.getHotelsInCity(city);
-        return hotels;
+        List<HotelDistanceDTO> hotelDistanceDTOs = new ArrayList<>();
+        for(Hotel hotel: hotels)
+        {
+            double distance=hotel.findDistanceFromCity(city).getDistance();
+            HotelDistanceDTO dto=new HotelDistanceDTO(hotel,distance);
+            hotelDistanceDTOs.add(dto);
+        }
 
+        return hotelDistanceDTOs.stream()
+                .sorted(Comparator.comparingDouble(HotelDistanceDTO:: getDistance))
+                .collect(Collectors.toList());
     }
 
 
@@ -77,4 +89,7 @@ public ResponseEntity<Map<String, Object>> getHotel(@PathVariable Integer id) {
 
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/get/{name}")
+    public Hotel search(@PathVariable String name) {return hotelService.searchHotel(name);}
 }
