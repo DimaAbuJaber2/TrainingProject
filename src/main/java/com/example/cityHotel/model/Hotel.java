@@ -3,6 +3,7 @@ package com.example.cityHotel.model;
 
 import com.example.cityHotel.utility.CalculateDistance;
 import com.example.cityHotel.dto.DistanceDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class Hotel {
     private int id;
     @Column(name="hotel_name")
     private String name;
+    @JsonBackReference
     @ManyToOne()
     @JoinColumn(name = "city_id")
     private City city;

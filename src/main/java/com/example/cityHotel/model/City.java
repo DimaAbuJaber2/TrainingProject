@@ -1,6 +1,7 @@
 package com.example.cityHotel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,7 @@ public class City {
         @Embedded
         @NonNull
         private locations location;
-        @JsonIgnore
+        @JsonManagedReference
         @OneToMany(mappedBy = "city",cascade = CascadeType.REMOVE)
         private List<Hotel> hotels;
 
