@@ -8,6 +8,7 @@ import com.example.cityHotel.repository.HotelRepo;
 import com.example.cityHotel.utility.CalculateDistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class HotelService {
         return hotel;
 
     }
+    @Transactional
     public Hotel saveHotel(Hotel hotel) {
         City city = cityRepo.findById(hotel.getCity().getId()).orElse(null);
         if(city==null) throw new CityNotFoundException("city is requires");
@@ -48,10 +50,12 @@ public class HotelService {
     public List<Hotel> getHotelsInCity(City city) {
         return hotelRepo.findByCity(city);
     }
+    @Transactional
     public void delete(Integer id)
     {
         this.hotelRepo.deleteById(id);
     }
+    @Transactional
     public Hotel update(Hotel hotel)
     {
         if(hotel.getName()==null) throw new MissingHotelNameException("hotel name is required");
@@ -65,6 +69,7 @@ public class HotelService {
         return this.hotelRepo.findAll();
     }
 
+    @Transactional
     public void rateHotel(Hotel hotel, int rating) {
         ratingService.rateHotel(hotel, rating);
     }

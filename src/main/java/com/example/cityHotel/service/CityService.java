@@ -9,6 +9,7 @@ import com.example.cityHotel.repository.CityRepo;
 import com.example.cityHotel.repository.HotelRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,7 @@ public class CityService {
         return city;
 
     }
+    @Transactional
     public City save(City city)
     {
         if(city.getName()==null) throw new MissingCityNameException("city name is required");
@@ -35,11 +37,13 @@ public class CityService {
             throw new MissingLocationException("location attribute is required");
         return this.cityRepo.save(city);
     }
+    @Transactional
     public void delete(Integer id)
     {
          this.cityRepo.deleteById(id);
     }
 
+    @Transactional
     public City updateCity(City city)
     {
         if(city.getName()==null) throw new MissingCityNameException("city name is required");
