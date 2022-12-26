@@ -49,17 +49,6 @@ public class Hotel {
     private double rating;
 
 
-    public Hotel(Integer id, String name, City city, @NonNull locations location, int numRatings, double rating) {
-        this.id = id;
-        this.name = name;
-        this.city = city;
-        this.location = location;
-        this.numRatings = numRatings;
-        this.rating = rating;
-    }
-
-
-
     public DistanceDTO findDistanceFromCity(City city)
     {
         double cityLat = city.getLocation().getLatitude();

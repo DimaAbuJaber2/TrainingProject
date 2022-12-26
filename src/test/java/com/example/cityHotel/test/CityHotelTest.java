@@ -114,27 +114,7 @@ class CityHotelApplicationTests {
     }
 
 
-//    @Test
-//    public void testGetDistanceBetweenCities() {
-//        City city1=new City();
-//        city1.setName("CityDistance");
-//        city1.setAddress("----");
-//        city1.setLocation(new locations(60.5,87.08));
-//        Hotel  hotel1=new Hotel();
-//        hotel1.setName("hotelDistance");
-//        hotel1.setLocation(new locations(54.9,77.66));
-//        hotel1.setCity(city1);
-//
-//
-//        cityRepo.save(city1);
-//        hotelRepo.save(hotel1);
-//        assertNotNull(cityRepo.findById(city1.getId()).get());
-//        assertNotNull(hotelRepo.findById(hotel1.getId()).get());
-//
-//       double distance= hotelRepo.findById(hotel1.getId()).get().findDistanceFromCity(cityRepo.findById(city1.getId()).get()).getDistance();
-//       assertEquals( 858.9285438746626,distance);
-//
-//    }
+
 
 
 }
