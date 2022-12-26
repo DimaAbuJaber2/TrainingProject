@@ -39,6 +39,7 @@ public class HotelController {
     @GetMapping("/{id}")
     public ResponseEntity<HotelDistanceDTO> getHotel(@PathVariable Integer id) {
         Hotel hotel = hotelService.getHotel(id);
+        System.out.println(hotel.getLocation());
         double distance = hotel.findDistanceFromCity(hotel.getCity()).getDistance();
         HotelDistanceDTO hotelDistanceDTO = new HotelDistanceDTO(hotel, distance);
         return ResponseEntity.ok(hotelDistanceDTO);

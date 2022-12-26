@@ -42,8 +42,8 @@ public class City {
         @ApiModelProperty(value = "List of hotels inside the city")
         @JsonManagedReference
         @OneToMany(mappedBy = "city",cascade = CascadeType.REMOVE)
+        @Basic(fetch = FetchType.LAZY)
         private List<Hotel> hotels;
-
 
 
 }
