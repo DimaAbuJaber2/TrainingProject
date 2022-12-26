@@ -8,7 +8,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableWebMvc
-@ComponentScan(value = {"com.example.cityHotel.service","com.example.cityHotel.configuration","com.example.cityHotel.controller","com.example.cityHotel.repository","com.example.cityHotel.model"})
+@ComponentScan(value = {"com.example.cityHotel.service","com.example.cityHotel.configuration","com.example.cityHotel.controller","com.example.cityHotel.repository","com.example.cityHotel.model","com.example.cityHotel.exception"})
 public class CityHotelApplication {
 
 	public static void main(String[] args) {

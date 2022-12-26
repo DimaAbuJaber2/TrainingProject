@@ -37,6 +37,16 @@ public class CityController {
         return ResponseEntity.ok(city);
     }
 
+    @ApiOperation(value = "Get All cities", response = City.class, responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved the city"),
+            @ApiResponse(code = 404, message = "The city with the given ID was not found")
+    })
+    @GetMapping("/")
+    public ResponseEntity<List<City>> getCity() {
+       List<City> cities = cityService.getAll();
+        return ResponseEntity.ok(cities);
+    }
 
     @ApiOperation(value = "Create a new city", response = City.class)
     @ApiResponses(value = {
