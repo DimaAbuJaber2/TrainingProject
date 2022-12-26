@@ -1,6 +1,7 @@
 package com.example.cityHotel.controller;
 
 
+import com.example.cityHotel.dto.RatingRequest;
 import com.example.cityHotel.model.City;
 import com.example.cityHotel.model.Hotel;
 import com.example.cityHotel.service.CityService;
