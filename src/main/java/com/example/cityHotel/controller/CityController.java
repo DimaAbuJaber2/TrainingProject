@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -54,7 +55,7 @@ public class CityController {
             @ApiResponse(code = 400, message = "Invalid request body")
     })
     @PostMapping("/")
-    public ResponseEntity<City> save(@RequestBody City city) {
+    public ResponseEntity<City> save(@Valid @RequestBody City city) {
         City savedCity = cityService.save(city);
         return ResponseEntity.ok()
                 .body(savedCity);
@@ -69,7 +70,7 @@ public class CityController {
     })
 
     @PutMapping("/")
-    public ResponseEntity<City> updateCity(@RequestBody City city) {
+    public ResponseEntity<City> updateCity( @Valid @RequestBody City city) {
         City updatedCity = cityService.updateCity(city);
         return ResponseEntity.status(HttpStatus.CREATED).body(updatedCity);
     }

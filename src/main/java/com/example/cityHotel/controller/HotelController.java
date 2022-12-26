@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,7 +51,7 @@ public class HotelController {
             @ApiResponse(code = 400, message = "Invalid request body")
     })
     @PostMapping("/")
-    public ResponseEntity<Hotel> saveHotel(@RequestBody Hotel hotel) {
+    public ResponseEntity<Hotel> saveHotel(@Valid @RequestBody Hotel hotel) {
         Hotel savedHotel = hotelService.saveHotel(hotel);
         return ResponseEntity.ok(savedHotel);
     }
@@ -63,7 +64,7 @@ public class HotelController {
             @ApiResponse(code = 404, message = "The hotel with the given ID was not found")
     })
     @PutMapping("/")
-    public ResponseEntity<Hotel> update(@RequestBody Hotel hotel) {
+    public ResponseEntity<Hotel> update(@Valid @RequestBody Hotel hotel) {
         Hotel updatedHotel = hotelService.saveHotel(hotel);
         return ResponseEntity.status(HttpStatus.CREATED).body(updatedHotel);
     }
@@ -134,7 +135,7 @@ public class HotelController {
             @ApiResponse(code = 404, message = "The hotel with the given ID was not found")
     })
     @PostMapping("/{id}/rate")
-    public ResponseEntity<Void> rateHotel(@PathVariable int id, @RequestBody RatingRequest ratingRequest) {
+    public ResponseEntity<Void> rateHotel(@PathVariable int id,@Valid @RequestBody RatingRequest ratingRequest) {
         Hotel hotel=hotelService.getHotel(id);
         hotelService.rateHotel(hotel, ratingRequest.getRating());
 
