@@ -1,5 +1,6 @@
 package com.example.cityHotel.service;
 
+import com.example.cityHotel.dto.HotelDistanceDTO;
 import com.example.cityHotel.exception.*;
 import com.example.cityHotel.model.City;
 import com.example.cityHotel.model.Hotel;
@@ -7,10 +8,16 @@ import com.example.cityHotel.repository.CityRepo;
 import com.example.cityHotel.repository.HotelRepo;
 import com.example.cityHotel.utility.CalculateDistance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class HotelService {
@@ -22,10 +29,20 @@ public class HotelService {
     private RatingService ratingService;
 
 
+    public HotelDistanceDTO getHotelWithDistance(Integer id)
+    {
+
+        Hotel hotel = hotelRepo.findById(id).orElseThrow(()->new HotelNotFoundException("Hotel with id: "+id+" not found"));;
+        double distance = hotel.findDistanceFromCity(hotel.getCity()).getDistance();
+        HotelDistanceDTO hotelDistanceDTO = new HotelDistanceDTO(hotel, distance);
+        return hotelDistanceDTO;
+
+    }
     public Hotel getHotel(Integer id)
     {
         Hotel hotel = this.hotelRepo.findById(id).orElseThrow(()->new HotelNotFoundException("Hotel with id: "+id+" not found"));
         return hotel;
+
 
     }
     @Transactional
@@ -47,7 +64,9 @@ public class HotelService {
 
 
     }
+
     public List<Hotel> getHotelsInCity(City city) {
+
         return hotelRepo.findByCity(city);
     }
     @Transactional
@@ -65,8 +84,62 @@ public class HotelService {
         return this.hotelRepo.save(hotel);
     }
 
-    public List<Hotel> getAll() {
-        return this.hotelRepo.findAll();
+
+    public Page<HotelDistanceDTO> getHotelsInCityWithDistance(City city,Pageable pageable) {
+        Pageable defaultPageable = PageRequest.of(0, 5, Sort.by("name").ascending());
+
+        if (pageable == null) {
+            pageable = defaultPageable;
+        }
+        if (city == null) {
+            return new PageImpl<>(Collections.emptyList(), pageable, 0);
+        }
+
+        // Retrieve a page of hotels for the given city
+        List<Hotel> hotels = this.getHotelsInCity(city);
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<Hotel> pageOfHotels = hotels.subList(startItem, Math.min(startItem + pageSize, hotels.size()));
+        Page<Hotel> hotelsPage = new PageImpl<>(pageOfHotels, pageable, hotels.size());
+
+        // Create a list of HotelDistanceDTO objects from the page of hotels
+        List<HotelDistanceDTO> hotelDistanceDTOs = new ArrayList<>();
+        for (Hotel hotel : hotelsPage) {
+            double distance = hotel.findDistanceFromCity(city).getDistance();
+            HotelDistanceDTO dto = new HotelDistanceDTO(hotel, distance);
+            hotelDistanceDTOs.add(dto);
+        }
+
+        // Sort the list of HotelDistanceDTO objects by distance
+        List<HotelDistanceDTO> sortedHotels = hotelDistanceDTOs.stream()
+                .sorted(Comparator.comparingDouble(HotelDistanceDTO::getDistance))
+                .collect(Collectors.toList());
+
+        // Return a new Page object containing the sorted list of HotelDistanceDTO objects
+        return new PageImpl<>(sortedHotels, hotelsPage.getPageable(), hotelsPage.getTotalElements());
+    }
+
+
+        public Page<Hotel> getHotels(int page, int size, String sortBy, Sort.Direction direction) {
+            Sort sort = Sort.by(direction, sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            return hotelRepo.findAll(pageable);
+
+    }
+
+
+    public Page<HotelDistanceDTO> getHotelsWithDistance(int page, int size, String sortBy, Sort.Direction direction) {
+        Pageable defaultPageable = PageRequest.of(0, 5, Sort.by("name").ascending());
+        Page<Hotel> hotels = this.getHotels(page, size, sortBy, direction);
+        List<HotelDistanceDTO> hotelDistanceDTOs = new ArrayList<>();
+        for (Hotel hotel : hotels) {
+            double distance = hotel.findDistanceFromCity(hotel.getCity()).getDistance();
+            HotelDistanceDTO dto = new HotelDistanceDTO(hotel, distance);
+            hotelDistanceDTOs.add(dto);
+        }
+
+        return new PageImpl<>(hotelDistanceDTOs, hotels.getPageable(), hotels.getTotalElements());
     }
 
     @Transactional
@@ -74,8 +147,13 @@ public class HotelService {
         ratingService.rateHotel(hotel, rating);
     }
 
-    public Hotel searchHotel(String name)
+
+    public HotelDistanceDTO searchHotel(String name)
     {
-        return this.hotelRepo.findByName(name);
+       Hotel hotel=hotelRepo.findByName(name);
+        double distance = hotel.findDistanceFromCity(hotel.getCity()).getDistance();
+        HotelDistanceDTO hotelDistanceDTO = new HotelDistanceDTO(hotel, distance);
+        return hotelDistanceDTO;
+
     }
 }

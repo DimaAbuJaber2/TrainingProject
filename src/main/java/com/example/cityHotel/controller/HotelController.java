@@ -12,6 +12,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,11 +43,8 @@ public class HotelController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<HotelDistanceDTO> getHotel(@PathVariable Integer id) {
-        Hotel hotel = hotelService.getHotel(id);
-        System.out.println(hotel.getLocation());
-        double distance = hotel.findDistanceFromCity(hotel.getCity()).getDistance();
-        HotelDistanceDTO hotelDistanceDTO = new HotelDistanceDTO(hotel, distance);
-        return ResponseEntity.ok(hotelDistanceDTO);
+        HotelDistanceDTO hotel = hotelService.getHotelWithDistance(id);
+        return ResponseEntity.ok(hotel);
     }
 
 
@@ -91,16 +92,13 @@ public class HotelController {
             @ApiResponse(code = 200, message = "Successfully retrieved list of hotels with the distance")
     })
     @GetMapping("/")
-    public ResponseEntity<List<HotelDistanceDTO>> getAll() {
-        List<Hotel> hotels = hotelService.getAll();
-        List<HotelDistanceDTO> hotelDistanceDTOs = new ArrayList<>();
-        for (Hotel hotel : hotels) {
-            double distance = hotel.findDistanceFromCity(hotel.getCity()).getDistance();
-            HotelDistanceDTO dto = new HotelDistanceDTO(hotel, distance);
-            hotelDistanceDTOs.add(dto);
-        }
-
-        return ResponseEntity.ok(hotelDistanceDTOs);
+    public ResponseEntity<Page<HotelDistanceDTO>> getAll(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                         @RequestParam(name = "size", defaultValue = "5") int size,
+                                                         @RequestParam(name = "sortBy", defaultValue = "name") String sortBy,
+                                                         @RequestParam(name = "direction", defaultValue = "asc") String direction) {
+        Sort.Direction sortDirection = Sort.Direction.fromOptionalString(direction).orElse(Sort.Direction.ASC);
+        Page<HotelDistanceDTO>hotelDistanceDTOS=hotelService.getHotelsWithDistance(page,size,sortBy,sortDirection);
+        return ResponseEntity.ok(hotelDistanceDTOS);
     }
 
 
@@ -110,22 +108,12 @@ public class HotelController {
             @ApiResponse(code = 404, message = "The city with the given ID was not found")
     })
 
-    @GetMapping("/city/{cityId}")
-    public ResponseEntity<List<HotelDistanceDTO>> getHotelsInCity(@PathVariable Integer cityId) {
-        City city = cityService.getCity(cityId);
-        List<Hotel> hotels = hotelService.getHotelsInCity(city);
-        List<HotelDistanceDTO> hotelDistanceDTOs = new ArrayList<>();
-        for (Hotel hotel : hotels) {
-            double distance = hotel.findDistanceFromCity(city).getDistance();
-            HotelDistanceDTO dto = new HotelDistanceDTO(hotel, distance);
-            hotelDistanceDTOs.add(dto);
-        }
+    @GetMapping("/city/{id}")
+    public ResponseEntity<Page<HotelDistanceDTO>> getHotelsInACity(@PathVariable int id, Pageable pageable) {
+        City city = cityService.getCity(id);
+        Page<HotelDistanceDTO>hotelDistanceDTO=hotelService.getHotelsInCityWithDistance(city,pageable);
 
-        List<HotelDistanceDTO> sortedHotelDistanceDTOs = hotelDistanceDTOs.stream()
-                .sorted(Comparator.comparingDouble(HotelDistanceDTO::getDistance))
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(sortedHotelDistanceDTOs);
+        return ResponseEntity.ok(hotelDistanceDTO);
     }
 
 
@@ -154,9 +142,8 @@ public class HotelController {
     })
     @GetMapping("/get/{name}")
     public ResponseEntity<HotelDistanceDTO> search(@PathVariable String name) {
-        Hotel hotel = hotelService.searchHotel(name);
-        double distance = hotel.findDistanceFromCity(hotel.getCity()).getDistance();
-        HotelDistanceDTO hotelDistanceDTO = new HotelDistanceDTO(hotel, distance);
-        return ResponseEntity.ok(hotelDistanceDTO);
+       HotelDistanceDTO hotel = hotelService.searchHotel(name);
+
+        return ResponseEntity.ok(hotel);
     }
 }

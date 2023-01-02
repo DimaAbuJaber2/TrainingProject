@@ -8,6 +8,10 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,8 +48,14 @@ public class CityController {
             @ApiResponse(code = 404, message = "The city with the given ID was not found")
     })
     @GetMapping("/")
-    public ResponseEntity<List<City>> getCity() {
-       List<City> cities = cityService.getAll();
+    public ResponseEntity<Page<City>> getCities(@RequestParam(name = "page",defaultValue = "0")int page,
+                                                @RequestParam(name="size", defaultValue = "5") int size,
+                                                @RequestParam(name = "sortBy", defaultValue = "name") String sortBy,
+                                                @RequestParam(name = "direction", defaultValue = "asc") String direction
+    ) {
+        Sort.Direction sortDirection = Sort.Direction.fromOptionalString(direction).orElse(Sort.Direction.ASC);
+        Pageable pageable= PageRequest.of(page,size, sortDirection, sortBy);
+        Page<City> cities = cityService.getAll(pageable);
         return ResponseEntity.ok(cities);
     }
 
@@ -88,14 +98,6 @@ public class CityController {
     }
 
 
-    @ApiOperation(value = "Get a list of all cities", response = City.class, responseContainer = "List")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved list of cities")
-    })
-    public ResponseEntity<List<City>> getAll() {
-        List<City> cities = cityService.getAll();
-        return ResponseEntity.ok(cities);
-    }
 
 
     @ApiOperation(value = "Get a list of hotels in a given city", response = HotelDistanceDTO.class, responseContainer = "List")
@@ -104,22 +106,12 @@ public class CityController {
             @ApiResponse(code = 404, message = "The city with the given ID was not found")
     })
     @GetMapping("/{id}/hotels")
-    public ResponseEntity<List<HotelDistanceDTO>> getAllHotels(@PathVariable Integer id) {
+    public ResponseEntity<Page<HotelDistanceDTO>> getHotels(@PathVariable int id, Pageable pageable) {
         City city = cityService.getCity(id);
-        List<Hotel> hotels = city.getHotels();
-        List<HotelDistanceDTO> hotelDistanceDTOS = new ArrayList<>();
-        for (Hotel hotel : hotels) {
-            double distance = hotel.findDistanceFromCity(city).getDistance();
-            HotelDistanceDTO dto = new HotelDistanceDTO(hotel, distance);
-            hotelDistanceDTOS.add(dto);
-        }
-
-        List<HotelDistanceDTO> sortedHotelDistanceDTOS = hotelDistanceDTOS.stream()
-                .sorted(Comparator.comparingDouble(HotelDistanceDTO::getDistance))
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(sortedHotelDistanceDTOS);
+        Page<HotelDistanceDTO> hotels = cityService.getAllHotels(city, pageable);
+        return ResponseEntity.ok(hotels);
     }
+
 
 
     @ApiOperation(value = "Search for a city by its name", response = City.class)
